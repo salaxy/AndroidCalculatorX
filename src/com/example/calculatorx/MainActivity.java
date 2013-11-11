@@ -2,6 +2,7 @@ package com.example.calculatorx;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -66,8 +67,10 @@ public class MainActivity extends Activity  implements OnClickListener{
     @Override
     public void onClick(View view) 
     {
+    	
         if(view instanceof Button){
             String input=((Button)view).getText().toString();
+			   Log.e("pressed: ", input);
             
            if(input.equals("0")){
         	   output.append(input);
@@ -78,7 +81,7 @@ public class MainActivity extends Activity  implements OnClickListener{
         	   
         	   if(inputOperation){
 
-        		   output.clearComposingText();
+        		   output.setText("");
             	   output.append(input);
             	   inputOperation=false;
         	   }else{
@@ -90,27 +93,34 @@ public class MainActivity extends Activity  implements OnClickListener{
         		   
         		   secoundValue=Double.parseDouble(output.getText().toString());
         		   
-        		   if(input.equals("*")){
-        			   
+        		   if(lastOperation.equals("*")){
         			   result=logic.mul(firstValue, secoundValue);
-        		   }else if(input.equals("/")){
+        			   Log.e("blubb", "mult");
+        		   }else if(lastOperation.equals("/")){
         			   result=logic.div(firstValue, secoundValue);
-        		   }else if(input.equals("-")){
+        			   Log.e("blubb", "div");
+        		   }else if(lastOperation.equals("-")){
         			   result=logic.sub(firstValue, secoundValue);
-        		   }else if(input.equals("+")){
+        		   }else if(lastOperation.equals("+")){
         			   result=logic.add(firstValue, secoundValue);
         		   }
         		   
-        		   output.clearComposingText();
+        		   output.setText("");
         		   output.setText(result.toString());
+    			   Log.e("blubb", result.toString());
         		   
         		   lastOperation=null;
         	   }
            }else if(input.equals("/")||input.equals("*")||input.equals("+")||input.equals("-")){
         	   firstValue=Double.parseDouble(output.getText().toString());
+        	   Log.e("blubb", output.getText().toString());
+
         	   lastOperation=input.toString();
         	   inputOperation=true;
-           }  
+           } else if(input.equals("C")){
+    		   output.setText("");
+    		   inputOperation=false;
+           }
         	   
         }
     }
