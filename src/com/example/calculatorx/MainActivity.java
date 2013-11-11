@@ -34,7 +34,7 @@ public class MainActivity extends Activity  implements OnClickListener{
     private Button buttonMult;
     private Button buttonC;
     private Button buttonEqual;
-    private TextView output;
+    private TextView display;
     private View rootView;
 
     private Double result;
@@ -73,25 +73,36 @@ public class MainActivity extends Activity  implements OnClickListener{
 			   Log.e("pressed: ", input);
             
            if(input.equals("0")){
-        	   output.append(input);
+        	   display.append(input);
+        	   
+        	 //prevent leading nulls
+        	   if(Double.parseDouble(display.getText().toString())==0.0d){
+        		   display.setText("0");
+        	   }
         	   
            }else if(input.equals("1")||input.equals("2")||input.equals("3")
         		   ||input.equals("4")||input.equals("5")||input.equals("6")
         		   ||input.equals("7")||input.equals("8")||input.equals("9")){
         	   
+        	   //prevent leading nulls
+        	   if(Double.parseDouble(display.getText().toString())==0.0d){
+        		   display.setText("");
+        	   }
+        	   
+        	 //set back display if operation was pressed
         	   if(inputOperation){
-
-        		   output.setText("");
-            	   output.append(input);
+        		   display.setText("");
+            	   display.append(input);
             	   inputOperation=false;
         	   }else{
-            	   output.append(input);
+            	   display.append(input);
         	   }
 	
            }else if(input.equals("=")){
+        	   
+        	   //if operation was pressed
         	   if(lastOperation!=null){
-        		   
-        		   secoundValue=Double.parseDouble(output.getText().toString());
+        		   secoundValue=Double.parseDouble(display.getText().toString());
         		   
         		   if(lastOperation.equals("*")){
         			   result=logic.mul(firstValue, secoundValue);
@@ -105,20 +116,20 @@ public class MainActivity extends Activity  implements OnClickListener{
         			   result=logic.add(firstValue, secoundValue);
         		   }
         		   
-        		   output.setText("");
-        		   output.setText(result.toString());
+        		   display.setText("");
+        		   display.setText(result.toString());
     			   Log.e("blubb", result.toString());
         		   
         		   lastOperation=null;
         	   }
            }else if(input.equals("/")||input.equals("*")||input.equals("+")||input.equals("-")){
-        	   firstValue=Double.parseDouble(output.getText().toString());
-        	   Log.e("blubb", output.getText().toString());
+        	   firstValue=Double.parseDouble(display.getText().toString());
+        	   Log.e("blubb", display.getText().toString());
 
         	   lastOperation=input.toString();
         	   inputOperation=true;
            } else if(input.equals("C")){
-    		   output.setText("");
+    		   display.setText("0");
     		   inputOperation=false;
            }
         	   
@@ -147,7 +158,7 @@ public class MainActivity extends Activity  implements OnClickListener{
         buttonC = (Button) findViewById(R.id.buttonC);
         buttonEqual = (Button) findViewById(R.id.buttonEqual);
 
-        output = (TextView) findViewById(R.id.output);
+        display = (TextView) findViewById(R.id.output);
     }
 
 }

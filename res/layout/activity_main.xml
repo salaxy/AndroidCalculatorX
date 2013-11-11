@@ -10,8 +10,9 @@
 
     <TextView
         android:id="@+id/output"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="287dp"
+        android:layout_height="wrap_content"
+        android:gravity="right"
         android:maxLength="9"
         android:text="0"
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -100,7 +101,7 @@
             android:id="@+id/button2"
             android:layout_width="70dp"
             android:layout_height="fill_parent"
-			android:onClick="onClick"
+            android:onClick="onClick"
             android:text="2" />
 
         <Button
