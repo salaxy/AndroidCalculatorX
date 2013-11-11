@@ -1,19 +1,18 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.fhb.taschenrechner;
+package com.example.calculatorx;
 
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
- *
+ * 
+ * @author Andy Klay <klay@fh-brandenburg.de>
  * @author MacYser
+ *
  */
 public class RechnerTest {
 

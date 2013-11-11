@@ -1,12 +1,10 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package de.fhb.taschenrechner;
+package com.example.calculatorx;
 
 /**
- *
+ * 
+ * @author Andy Klay <klay@fh-brandenburg.de>
  * @author MacYser
+ *
  */
 public class Rechner {
 

@@ -8,7 +8,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * 
+ * @author Andy Klay <klay@fh-brandenburg.de>
+ *
+ */
 public class MainActivity extends Activity  implements OnClickListener{
+	
+	private Rechner logic;
 	
     private Button button0;
     private Button button1;
@@ -30,12 +37,16 @@ public class MainActivity extends Activity  implements OnClickListener{
     private View rootView;
 
     private Double result;
-    public String value;
+    public Double secoundValue;
+    public Double firstValue;
+    private String lastOperation =null;
+    private boolean inputOperation=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 	}
 
 	@Override
@@ -44,6 +55,10 @@ public class MainActivity extends Activity  implements OnClickListener{
 		getMenuInflater().inflate(R.menu.main, menu);
 		
 		initViews();
+		logic=new Rechner();
+		firstValue=0.0d;
+		secoundValue=0.0d;
+		result=0.0d;
 		
 		return true;
 	}
@@ -52,44 +67,54 @@ public class MainActivity extends Activity  implements OnClickListener{
     public void onClick(View view) 
     {
         if(view instanceof Button){
-            String statement=((Button)view).getText().toString();
-           output.append(((Button)view).getText());
+            String input=((Button)view).getText().toString();
+            
+           if(input.equals("0")){
+        	   output.append(input);
+        	   
+           }else if(input.equals("1")||input.equals("2")||input.equals("3")
+        		   ||input.equals("4")||input.equals("5")||input.equals("6")
+        		   ||input.equals("7")||input.equals("8")||input.equals("9")){
+        	   
+        	   if(inputOperation){
 
-           if(statement.equals("1")){
+        		   output.clearComposingText();
+            	   output.append(input);
+            	   inputOperation=false;
+        	   }else{
+            	   output.append(input);
+        	   }
 	
-           }else if(statement.equals("2")){
-            		
-           }else if(statement.equals("3")){
-        	   
-           }else if(statement.equals("4")){
-        	   
-           }else if(statement.equals("5")){
-        	   
-           }else if(statement.equals("6")){
-        	   
-           }else if(statement.equals("7")){
-        	   
-           }else if(statement.equals("8")){
-        	   
-           }else if(statement.equals("9")){
-        	   
-           }else if(statement.equals("C")){
-        	   
-           }else if(statement.equals("=")){
-        	   
-           }else if(statement.equals("/")){
-        	   
-           }else if(statement.equals("+")){
-        	   
-           }else if(statement.equals("-")){
-        	   
-           }else if(statement.equals("*")){
-        	   
+           }else if(input.equals("=")){
+        	   if(lastOperation!=null){
+        		   
+        		   secoundValue=Double.parseDouble(output.getText().toString());
+        		   
+        		   if(input.equals("*")){
+        			   
+        			   result=logic.mul(firstValue, secoundValue);
+        		   }else if(input.equals("/")){
+        			   result=logic.div(firstValue, secoundValue);
+        		   }else if(input.equals("-")){
+        			   result=logic.sub(firstValue, secoundValue);
+        		   }else if(input.equals("+")){
+        			   result=logic.add(firstValue, secoundValue);
+        		   }
+        		   
+        		   output.clearComposingText();
+        		   output.setText(result.toString());
+        		   
+        		   lastOperation=null;
+        	   }
+           }else if(input.equals("/")||input.equals("*")||input.equals("+")||input.equals("-")){
+        	   firstValue=Double.parseDouble(output.getText().toString());
+        	   lastOperation=input.toString();
+        	   inputOperation=true;
            }  
         	   
         }
     }
-    
+
     
     
     private void initViews() {
