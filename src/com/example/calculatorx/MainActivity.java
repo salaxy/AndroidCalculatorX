@@ -1,8 +1,6 @@
 package com.example.calculatorx;
 
 import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,8 +27,12 @@ public class MainActivity extends Activity implements OnClickListener {
 	public Double firstValue;
 	
 	private String lastOperation = null;
+	//wir nehmen von der ersten operation an, es wäre ein operator gedrückt worden
 	private boolean operationWasPressed = false;
 	private boolean errorState=false;
+	
+	private boolean firstValueTypedIn = true;
+	private boolean secoundValueTypedIn = false;
 
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS=9;
@@ -100,44 +102,58 @@ public class MainActivity extends Activity implements OnClickListener {
 					
 					calcResult();
 					
-						
-					//cut long digits after decimal point
-					if(!result.isInfinite() &&!result.isNaN()){
-						
-						DecimalFormat formatter = new DecimalFormat("#.##");
-//						formatter.setGroupingSize(7);
-//						formatter.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.GERMAN));
-//						formatter.setMaximumFractionDigits(7);
-						result=Double.parseDouble(formatter.format(result));
-						Double myDoubleString = Math.round(result*10000000) / 10000000.0;
-						Log.i("formated result",myDoubleString.toString());
-						result=myDoubleString;		
-					}
-
-					//catch exceptions
-					if (String.valueOf(result).length() > MAX_NUMS || result.isInfinite() ||result.isNaN()) {
-						display.setText(FAIL_NOTIFICATION);
-						errorState=true;
-					} else {
-						display.setText(result.toString());
-						Log.i("result", result.toString());
-					}
+					displayResult();
 
 					lastOperation = null;
+					operationWasPressed=false;
+					firstValueTypedIn=true;
 				}
 			} else if (input.equals("/") || input.equals("*")
 					|| input.equals("+") || input.equals("-")) {
+				lastOperation = input;
 				
-				firstValue = Double.parseDouble(display.getText().toString());
+				//if additional operators for chaining calculation are pressed
+				if(firstValueTypedIn){
+					Log.i("chaining","...");
+					secoundValue = Double.parseDouble(display.getText().toString());
+					Log.i("secoundValue",secoundValue.toString());
+					calcResult();
+
+					firstValueTypedIn=true;
+					//zeige ergebnis 
+//					displayResult();
+				}else{
+					firstValue = Double.parseDouble(display.getText().toString());
+				}
 				
 				Log.i("operation pressed", input);
 				Log.i("firstValue",firstValue.toString());
 
-				lastOperation = input;
 				operationWasPressed = true;
 			} else if (input.equals("C")) {
 				setBackValues(input);
 			}
+		}
+	}
+
+	private void displayResult() {
+		//cut long digits after decimal point
+		if(!result.isInfinite() &&!result.isNaN()){
+			
+			DecimalFormat formatter = new DecimalFormat("#.##");
+			result=Double.parseDouble(formatter.format(result));
+			Double myDoubleString = Math.round(result*10000000) / 10000000.0;
+			Log.i("formated result",myDoubleString.toString());
+			result=myDoubleString;		
+		}
+
+		//catch exceptions
+		if (String.valueOf(result).length() > MAX_NUMS || result.isInfinite() ||result.isNaN()) {
+			display.setText(FAIL_NOTIFICATION);
+			errorState=true;
+		} else {
+			display.setText(result.toString());
+			Log.i("result", result.toString());
 		}
 	}
 
@@ -147,22 +163,25 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void calcResult() {
 		if (lastOperation.equals("*")) {
 			result = logic.mul(firstValue, secoundValue);
-			Log.i("calculate", "mult");
+			Log.i("calculate", firstValue + " mult " + secoundValue);
 		} else if (lastOperation.equals("/")) {
 			try{
 				result = logic.div(firstValue, secoundValue);
-				Log.i("calculate", "div");
+				Log.i("calculate",firstValue + " div " + secoundValue);
 			}catch(ArithmeticException e){
 				result=Double.NaN;
 			}
 		} else if (lastOperation.equals("-")) {
 			result = logic.sub(firstValue, secoundValue);
-			Log.i("calculate", "sub");
+			Log.i("calculate", firstValue + " sub " + secoundValue);
 		} else if (lastOperation.equals("+")) {
 			result = logic.add(firstValue, secoundValue);
-			Log.i("calculate", "add");
+			Log.i("calculate", firstValue + " add " + secoundValue);
 		}
 		Log.i("result", result.toString());
+		
+		//setze result als  firstValue um gleich weiter rechnen zu können
+		firstValue=result;
 	}
 
 	/**
