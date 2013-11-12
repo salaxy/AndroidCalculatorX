@@ -62,7 +62,7 @@ public class MainActivity extends Activity implements OnClickListener {
 				if (input.equals("C")) {
 					setBackValues(input);
 				}
-				Log.i("error notification detected", input);
+				Log.i("input blocked through error state", input);
 			} else if (input.equals("1") || input.equals("2")
 					|| input.equals("3") || input.equals("4")
 					|| input.equals("5") || input.equals("6")
@@ -91,7 +91,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					secoundValue = Double.parseDouble(display.getText()
 							.toString());
 					Log.i("secoundValue",secoundValue.toString());
-
+					
 					calcResult();
 
 					//catch exceptions
@@ -118,7 +118,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			} else if (input.equals("C")) {
 				setBackValues(input);
 			}
-
 		}
 	}
 
@@ -160,7 +159,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void initViews() {
-
 		display = (TextView) findViewById(R.id.output);
 	}
 
