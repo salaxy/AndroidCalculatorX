@@ -1,5 +1,10 @@
 package com.example.calculatorx;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -51,6 +56,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
+	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View view) {
 
@@ -93,6 +99,20 @@ public class MainActivity extends Activity implements OnClickListener {
 					Log.i("secoundValue",secoundValue.toString());
 					
 					calcResult();
+					
+						
+					//cut long digits after decimal point
+					if(!result.isInfinite() &&!result.isNaN()){
+						
+						DecimalFormat formatter = new DecimalFormat("#.##");
+//						formatter.setGroupingSize(7);
+//						formatter.setDecimalFormatSymbols(DecimalFormatSymbols.getInstance(Locale.GERMAN));
+//						formatter.setMaximumFractionDigits(7);
+						result=Double.parseDouble(formatter.format(result));
+						Double myDoubleString = Math.round(result*10000000) / 10000000.0;
+						Log.i("formated result",myDoubleString.toString());
+						result=myDoubleString;		
+					}
 
 					//catch exceptions
 					if (String.valueOf(result).length() > MAX_NUMS || result.isInfinite() ||result.isNaN()) {
@@ -142,6 +162,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			result = logic.add(firstValue, secoundValue);
 			Log.i("calculate", "add");
 		}
+		Log.i("result", result.toString());
 	}
 
 	/**
