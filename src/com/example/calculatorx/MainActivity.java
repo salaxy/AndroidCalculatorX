@@ -27,12 +27,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	public Double firstValue;
 	
 	private String lastOperation = null;
-	//wir nehmen von der ersten operation an, es wäre ein operator gedrückt worden
 	private boolean operationWasPressed = false;
 	private boolean errorState=false;
 	
 	private boolean firstValueTypedIn = true;
-	private boolean secoundValueTypedIn = false;
 
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS=9;
@@ -80,14 +78,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			allowPressingSetBackButton(input);
 		} else if (isNumber(input)) {
 			addingNewNumberToDisplay(input);
-		} else if (input.equals("=")) {
-
-			// if operation was pressed
+		} else if (isEquals(input)) {
 			if (lastOperation != null) {
 				readInSecoundValueFromDisplay();
 				calcResult();
 				displayResult();
-
 				lastOperation = null;
 				operationWasPressed=false;
 				firstValueTypedIn=true;
@@ -95,16 +90,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		} else if (isOperator(input)) {
 			lastOperation = input;
 			
-			//if additional operators for chaining calculation are pressed
 			if(firstValueTypedIn){
-				Log.i("chaining","...");
+				Log.i("chaining","operator pressed");
 				
 				readInSecoundValueFromDisplay();
 				calcResult();
-
-				firstValueTypedIn=true;
-				//zeige ergebnis 
 				displayResult();
+				firstValueTypedIn=true; 
 			}else{
 				readInFirstValueFromDisplay();
 			}
@@ -116,6 +108,10 @@ public class MainActivity extends Activity implements OnClickListener {
 		} else if (input.equals("C")) {
 			setBackValues(input);
 		}
+	}
+
+	private boolean isEquals(String input) {
+		return input.equals("=");
 	}
 
 	private boolean isOperator(String input) {
@@ -142,7 +138,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void addingNewNumberToDisplay(String input) {
 		preventTypedinLeadingNulls();
 
-		// set back display if operation was pressed
 		if (operationWasPressed) {
 			display.setText("");
 			display.append(input);
@@ -171,14 +166,9 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void displayResult() {
-		//cut long digits after decimal point
+		//cut long digits after decimal point etc
 		if(!result.isInfinite() &&!result.isNaN()){
-			
-			DecimalFormat formatter = new DecimalFormat("#.##");
-			result=Double.parseDouble(formatter.format(result));
-			Double myDoubleString = Math.round(result*10000000) / 10000000.0;
-			Log.i("formated result",myDoubleString.toString());
-			result=myDoubleString;		
+			restrictResultToSevenSigns();		
 		}
 
 		//catch exceptions
@@ -187,8 +177,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			errorState=true;
 		} else {
 			display.setText(result.toString());
-			Log.i("result", result.toString());
+			Log.i("display result", result.toString());
 		}
+	}
+
+	private void restrictResultToSevenSigns() {
+		DecimalFormat formatter = new DecimalFormat("#.##");
+		result=Double.parseDouble(formatter.format(result));
+		Double myDoubleString = Math.round(result*10000000) / 10000000.0;
+		Log.i("formated result",myDoubleString.toString());
+		result=myDoubleString;
 	}
 
 	/**
@@ -215,6 +213,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.i("result", result.toString());
 		
 		//setze result als  firstValue um gleich weiter rechnen zu können
+		//TODO kritische Stelle, intern wird mit dem result als fisrtValue weitergerechnet
 		firstValue=result;
 	}
 
