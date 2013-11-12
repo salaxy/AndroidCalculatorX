@@ -65,75 +65,109 @@ public class MainActivity extends Activity implements OnClickListener {
 		if (view instanceof Button) {
 			String input = ((Button) view).getText().toString();
 			Log.i("pressed: ", input);
-
-			if (errorState) {
-				if (input.equals("C")) {
-					setBackValues(input);
-				}
-				Log.i("input blocked through error state", input);
-			} else if (input.equals("1") || input.equals("2")
-					|| input.equals("3") || input.equals("4")
-					|| input.equals("5") || input.equals("6")
-					|| input.equals("7") || input.equals("8")
-					|| input.equals("9")|| input.equals("0")) {
-
-				// prevent leading nulls
-				if (Double.parseDouble(display.getText().toString()) == 0.0d) {
-					display.setText("");
-				}
-
-				// set back display if operation was pressed
-				if (operationWasPressed) {
-					display.setText("");
-					display.append(input);
-					operationWasPressed = false;
-				} else {
-					display.append(input);
-					Log.i("append", input);
-				}
-
-			} else if (input.equals("=")) {
-
-				// if operation was pressed
-				if (lastOperation != null) {
-					secoundValue = Double.parseDouble(display.getText()
-							.toString());
-					Log.i("secoundValue",secoundValue.toString());
-					
-					calcResult();
-					
-					displayResult();
-
-					lastOperation = null;
-					operationWasPressed=false;
-					firstValueTypedIn=true;
-				}
-			} else if (input.equals("/") || input.equals("*")
-					|| input.equals("+") || input.equals("-")) {
-				lastOperation = input;
-				
-				//if additional operators for chaining calculation are pressed
-				if(firstValueTypedIn){
-					Log.i("chaining","...");
-					secoundValue = Double.parseDouble(display.getText().toString());
-					Log.i("secoundValue",secoundValue.toString());
-					calcResult();
-
-					firstValueTypedIn=true;
-					//zeige ergebnis 
-//					displayResult();
-				}else{
-					firstValue = Double.parseDouble(display.getText().toString());
-				}
-				
-				Log.i("operation pressed", input);
-				Log.i("firstValue",firstValue.toString());
-
-				operationWasPressed = true;
-			} else if (input.equals("C")) {
-				setBackValues(input);
-			}
+			
+			analyzeInput(input);
 		}
+	}
+
+	/**
+	 * Analyzing button input
+	 * @param input - String name of clicked Button
+	 */
+	private void analyzeInput(String input) {
+		
+		if (errorState) {
+			allowPressingSetBackButton(input);
+		} else if (isNumber(input)) {
+			addingNewNumberToDisplay(input);
+		} else if (input.equals("=")) {
+
+			// if operation was pressed
+			if (lastOperation != null) {
+				readInSecoundValueFromDisplay();
+				calcResult();
+				displayResult();
+
+				lastOperation = null;
+				operationWasPressed=false;
+				firstValueTypedIn=true;
+			}
+		} else if (isOperator(input)) {
+			lastOperation = input;
+			
+			//if additional operators for chaining calculation are pressed
+			if(firstValueTypedIn){
+				Log.i("chaining","...");
+				
+				readInSecoundValueFromDisplay();
+				calcResult();
+
+				firstValueTypedIn=true;
+				//zeige ergebnis 
+				displayResult();
+			}else{
+				readInFirstValueFromDisplay();
+			}
+			
+			Log.i("operation pressed", input);
+			Log.i("firstValue",firstValue.toString());
+
+			operationWasPressed = true;
+		} else if (input.equals("C")) {
+			setBackValues(input);
+		}
+	}
+
+	private boolean isOperator(String input) {
+		return input.equals("/") || input.equals("*")
+				|| input.equals("+") || input.equals("-");
+	}
+
+	private boolean isNumber(String input) {
+		return input.equals("1") || input.equals("2")
+				|| input.equals("3") || input.equals("4")
+				|| input.equals("5") || input.equals("6")
+				|| input.equals("7") || input.equals("8")
+				|| input.equals("9")|| input.equals("0");
+	}
+
+	private void allowPressingSetBackButton(String input) {
+		if (input.equals("C")) {
+			setBackValues(input);
+		}else{
+			Log.i("input blocked through error state", input);			
+		}
+	}
+
+	private void addingNewNumberToDisplay(String input) {
+		preventTypedinLeadingNulls();
+
+		// set back display if operation was pressed
+		if (operationWasPressed) {
+			display.setText("");
+			display.append(input);
+			operationWasPressed = false;
+		} else {
+			display.append(input);
+			Log.i("append", input);
+		}
+	}
+
+	private void preventTypedinLeadingNulls() {
+		// prevent leading nulls
+		if (Double.parseDouble(display.getText().toString()) == 0.0d) {
+			display.setText("");
+		}
+	}
+
+	private void readInSecoundValueFromDisplay() {
+		secoundValue = Double.parseDouble(display.getText().toString());
+		Log.i("readInSecoundValueFromDisplay",secoundValue.toString());
+	}
+
+	private void readInFirstValueFromDisplay() {
+		firstValue = Double.parseDouble(display.getText().toString());
+		Log.i("readInSecoundValueFromDisplay", firstValue.toString());
 	}
 
 	private void displayResult() {
