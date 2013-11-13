@@ -30,7 +30,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private boolean operationWasPressed = false;
 	private boolean errorState=false;
 	
-	private boolean firstValueTypedIn = true;
+	private boolean firstValueTypedIn = false;
 
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS=9;
@@ -88,7 +88,9 @@ public class MainActivity extends Activity implements OnClickListener {
 				firstValueTypedIn=true;
 			}
 		} else if (isOperator(input)) {
+			Log.i("operation pressed", input);
 			lastOperation = input;
+			operationWasPressed = true;
 			
 			if(firstValueTypedIn){
 				Log.i("chaining","operator pressed");
@@ -100,11 +102,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			}else{
 				readInFirstValueFromDisplay();
 			}
-			
-			Log.i("operation pressed", input);
-			Log.i("firstValue",firstValue.toString());
-
-			operationWasPressed = true;
 		} else if (input.equals("C")) {
 			setBackValues(input);
 		}
@@ -168,7 +165,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void displayResult() {
 		//cut long digits after decimal point etc
 		if(!result.isInfinite() &&!result.isNaN()){
-			restrictResultToSevenSigns();		
+			restrictResultToNineSigns();		
 		}
 
 		//catch exceptions
@@ -181,12 +178,13 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void restrictResultToSevenSigns() {
+	private void restrictResultToNineSigns() {
+		//TODO Problem mit der E-Schreibweise treten immer wieder auf und führen zu Error-Meldungen
 		DecimalFormat formatter = new DecimalFormat("#.##");
 		result=Double.parseDouble(formatter.format(result));
-		Double myDoubleString = Math.round(result*10000000) / 10000000.0;
-		Log.i("formated result",myDoubleString.toString());
-		result=myDoubleString;
+		Double roundedResult = Math.round(result*10000000) / 10000000.0;
+		Log.i("formated result",roundedResult.toString());
+		result=roundedResult;
 	}
 
 	/**
@@ -213,7 +211,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		Log.i("result", result.toString());
 		
 		//setze result als  firstValue um gleich weiter rechnen zu können
-		//TODO kritische Stelle, intern wird mit dem result als fisrtValue weitergerechnet
+		//TODO kritische Stelle, intern wird mit dem result als firstValue weitergerechnet
 		firstValue=result;
 	}
 
