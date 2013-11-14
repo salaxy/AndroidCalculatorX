@@ -46,11 +46,10 @@ public class MainActivity extends Activity {
 	private String lastOperation = null;
 	private boolean operationWasPressed = false;
 	private boolean errorState = false;
-//	private boolean firstValueTypedIn = false;
 
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS = 9;
-	private boolean firstValueWasReadIn;
+	private boolean firstValueWasReadIn = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,19 +76,19 @@ public class MainActivity extends Activity {
 		firstValue = 0.0d;
 		secoundValue = 0.0d;
 		errorState = false;
+		firstValueWasReadIn = false;
 		Log.i("setback pressed", "...");
 	}
 
 	public void onClickEquals(View view) {
 		if (!errorState && lastOperation != null) {
-			
+
 			readInSecoundValueFromDisplay();
 			calcResult();
 			displayResult();
-			
+
 			lastOperation = null;
-			operationWasPressed = false;
-			firstValueWasReadIn=false;
+			firstValueWasReadIn = false;
 		}
 	}
 
@@ -99,20 +98,14 @@ public class MainActivity extends Activity {
 		if (!errorState) {
 			Log.i("operation pressed", input);
 			lastOperation = input;
-			
-			if (firstValueWasReadIn&&operationWasPressed) {
-				Log.i("chaining", "operator pressed");
 
-				readInSecoundValueFromDisplay();
-				calcResult();
-				displayResult();
-				
-				firstValueWasReadIn=false;
+			if (firstValueWasReadIn) {
+				Log.i("chaining", "...");
+				onClickEquals(null);
 			} else {
 				readInFirstValueFromDisplay();
-				firstValueWasReadIn=true;
+				firstValueWasReadIn = true;
 			}
-			
 			operationWasPressed = true;
 		}
 	}
@@ -144,8 +137,7 @@ public class MainActivity extends Activity {
 
 	private void readInFirstValueFromDisplay() {
 		firstValue = Double.parseDouble(display.getText().toString());
-
-		Log.i("readInSecoundValueFromDisplay", firstValue.toString());
+		Log.i("readInfirstValueFromDisplay", firstValue.toString());
 	}
 
 	private void displayResult() {
