@@ -1,7 +1,9 @@
 package com.example.calculatorx;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,25 +17,26 @@ import android.widget.TextView;
  * 
  */
 public class MainActivity extends Activity {
-	
-    private Button button0;
-    private Button button1;
-    private Button button2;
-    private Button button3;
-    private Button button4;
-    private Button button5;
-    private Button button6;
-    private Button button7;
-    private Button button8;
-    private Button button9;
-    private Button buttonPlus;
-    private Button buttonMinus;
-    private Button buttonDiv;
-    private Button buttonMult;
-    private Button buttonC;
-    private Button buttonEqual;
-	
-    
+
+	private Button button0;
+	private Button button1;
+	private Button button2;
+	private Button button3;
+	private Button button4;
+	private Button button5;
+	private Button button6;
+	private Button button7;
+	private Button button8;
+	private Button button9;
+	private Button buttonPlus;
+	private Button buttonMinus;
+	private Button buttonDiv;
+	private Button buttonMult;
+	private Button buttonC;
+	private Button buttonEqual;
+
+	private ArrayList<Button> buttons = new ArrayList<Button>();
+
 	private Rechner logic;
 	private TextView display;
 
@@ -61,68 +64,35 @@ public class MainActivity extends Activity {
 		result = 0.0d;
 	}
 
-//	@Override
-//	public void onClick(View view) {
-//
-//		if (view instanceof Button) {
-//			String input = ((Button) view).getText().toString();
-//			Log.i("pressed: ", input);
-//
-//			analyzeInput(input);
-//		}
-//	}
-
 	public void onClickNumber(View view) {
-
-		String input = ((Button) view).getText().toString();
 		if (!errorState) {
 			addingNewNumberToDisplay(((Button) view).getText().toString());
 		}
 	}
 
-//	/**
-//	 * Analyzing button input
-//	 * 
-//	 * @param input
-//	 *            - String name of clicked Button
-//	 */
-//	private void analyzeInput(String input) {
-//
-//		if (errorState) {
-//			allowPressingSetBackButton(input);
-//		} else if (isNumber(input)) {
-//			addingNewNumberToDisplay(input);
-//		} else if (isEquals(input)) {
-//			onClickEquals();
-//		} else if (isOperator(input)) {
-//			onClickOperator(input);
-//		} else if (input.equals("C")) {
-//			onClickCancel(input);
-//		}
-//	}
-
-	
 	public void onClickCancel(View view) {
-		String input = ((Button) view).getText().toString();
-		setBackValues(input);
+		display.setText("0");
+		operationWasPressed = false;
+		lastOperation = null;
+		firstValue = 0.0d;
+		secoundValue = 0.0d;
+		errorState = false;
+		Log.i("setback pressed", "...");
 	}
 
 	public void onClickEquals(View view) {
-		String input = ((Button) view).getText().toString();
-		if (!errorState) {
-			if (lastOperation != null) {
-				readInSecoundValueFromDisplay();
-				calcResult();
-				displayResult();
-				lastOperation = null;
-				operationWasPressed = false;
-				firstValueTypedIn = true;
-			}
+		if (!errorState && lastOperation != null) {
+			readInSecoundValueFromDisplay();
+			calcResult();
+			displayResult();
+			lastOperation = null;
+			operationWasPressed = false;
+			firstValueTypedIn = true;
 		}
 	}
 
 	public void onClickOperator(View view) {
-String input = ((Button) view).getText().toString();
+		String input = ((Button) view).getText().toString();
 
 		if (!errorState) {
 			Log.i("operation pressed", input);
@@ -141,23 +111,6 @@ String input = ((Button) view).getText().toString();
 			}
 		}
 	}
-
-//	private boolean isEquals(String input) {
-//		return input.equals("=");
-//	}
-//
-//	private boolean isOperator(String input) {
-//		return input.equals("/") || input.equals("*") || input.equals("+")
-//				|| input.equals("-");
-//	}
-
-//	private void allowPressingSetBackButton(String input) {
-//		if (input.equals("C")) {
-//			onClickCancel(input);
-//		} else {
-//			Log.i("input blocked through error state", input);
-//		}
-//	}
 
 	private void addingNewNumberToDisplay(String input) {
 		preventTypedinLeadingNulls();
@@ -221,6 +174,7 @@ String input = ((Button) view).getText().toString();
 	 * calculate the result Value with the last operation
 	 */
 	private void calcResult() {
+
 		if (lastOperation.equals("*")) {
 			result = logic.mul(firstValue, secoundValue);
 			Log.i("calculate", firstValue + " mult " + secoundValue);
@@ -244,44 +198,28 @@ String input = ((Button) view).getText().toString();
 		// TODO kritische Stelle, intern wird mit dem result als firstValue
 		// weitergerechnet
 		firstValue = result;
-	}
-
-	/**
-	 * set Back all Values
-	 * 
-	 * @param input
-	 *            - last input
-	 */
-	private void setBackValues(String input) {
-		display.setText("0");
-		operationWasPressed = false;
-		lastOperation = null;
-		firstValue = 0.0d;
-		secoundValue = 0.0d;
-		errorState = false;
-		Log.i("setback pressed", input);
+		displayResult();
 	}
 
 	private void initViews() {
-		
-        button0 = (Button) findViewById(R.id.button0);
-        button1 = (Button) findViewById(R.id.button1);
-        button2 = (Button) findViewById(R.id.button2);
-        button3 = (Button) findViewById(R.id.button3);
-        button4 = (Button) findViewById(R.id.button4);
-        button5 = (Button) findViewById(R.id.button5);
-        button6 = (Button) findViewById(R.id.button6);
-        button7 = (Button) findViewById(R.id.button7);
-        button8 = (Button) findViewById(R.id.button8);
-        button9 = (Button) findViewById(R.id.button9);
-        buttonPlus = (Button) findViewById(R.id.buttonPlus);
-        buttonMinus = (Button) findViewById(R.id.buttonMinus);
-        buttonDiv = (Button) findViewById(R.id.buttonDiv);
-        buttonMult = (Button) findViewById(R.id.buttonMult);
-        buttonEqual = (Button) findViewById(R.id.buttonEqual);       
-        
-        buttonC = (Button) findViewById(R.id.buttonC);
-		
+
+		buttons.add(button0 = (Button) findViewById(R.id.button0));
+		buttons.add(button1 = (Button) findViewById(R.id.button1));
+		buttons.add(button2 = (Button) findViewById(R.id.button2));
+		buttons.add(button3 = (Button) findViewById(R.id.button3));
+		buttons.add(button4 = (Button) findViewById(R.id.button4));
+		buttons.add(button5 = (Button) findViewById(R.id.button5));
+		buttons.add(button6 = (Button) findViewById(R.id.button6));
+		buttons.add(button7 = (Button) findViewById(R.id.button7));
+		buttons.add(button8 = (Button) findViewById(R.id.button8));
+		buttons.add(button9 = (Button) findViewById(R.id.button9));
+		buttons.add(buttonPlus = (Button) findViewById(R.id.buttonPlus));
+		buttons.add(buttonMinus = (Button) findViewById(R.id.buttonMinus));
+		buttons.add(buttonDiv = (Button) findViewById(R.id.buttonDiv));
+		buttons.add(buttonMult = (Button) findViewById(R.id.buttonMult));
+		buttons.add(buttonEqual = (Button) findViewById(R.id.buttonEqual));
+
+		buttonC = (Button) findViewById(R.id.buttonC);
 		display = (TextView) findViewById(R.id.output);
 	}
 
