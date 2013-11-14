@@ -141,31 +141,44 @@ public class MainActivity extends Activity {
 	}
 
 	private void displayResult() {
+		String formatedResult=FAIL_NOTIFICATION;
+		
 		// cut long digits after decimal point etc
 		if (!result.isInfinite() && !result.isNaN()) {
-			restrictResultToNineSigns();
+			formatedResult=restrictResultToNineSigns();
 		}
 
+		int resultLength=formatedResult.length();
+		
+		if(formatedResult.contains("-")) resultLength--;
+		if(formatedResult.contains(".")) resultLength--;
+		
 		// catch exceptions
-		if (String.valueOf(result).length() > MAX_NUMS || result.isInfinite()
+		if (resultLength > MAX_NUMS || result.isInfinite()
 				|| result.isNaN()) {
 			display.setText(FAIL_NOTIFICATION);
 			errorState = true;
 		} else {
-			display.setText(result.toString());
+			display.setText(formatedResult);
 			Log.i("display result", result.toString());
 		}
 	}
 
-	private void restrictResultToNineSigns() {
+	/**
+	 * rounding and format result before it is displaying
+	 * @return
+	 */
+	private String restrictResultToNineSigns() {
 		// TODO Problem mit der E-Schreibweise treten immer wieder auf und
 		// führen zu Error-Meldungen
-		DecimalFormat formatter = new DecimalFormat("#.##");
-		// Kurz vor der ausagbe nochmal formatter benutzen
-		result = Double.parseDouble(formatter.format(result));
-		Double roundedResult = Math.round(result * 10000000) / 10000000.0;
-		Log.i("formated result", roundedResult.toString());
-		result = roundedResult;
+//		DecimalFormat formatter = new DecimalFormat("#.##");
+		//runden auf 8 stellen nach dem Komma
+		Double roundedResult = Math.round(result * 100000000) / 100000000.0;
+		Log.i("rounded result", roundedResult.toString());
+//		String displayedResult=formatter.format(roundedResult);
+//		Log.i("formated result", displayedResult);
+//		return displayedResult;
+		return roundedResult.toString();
 	}
 
 	/**
