@@ -3,7 +3,6 @@ package com.example.calculatorx;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,10 +46,11 @@ public class MainActivity extends Activity {
 	private String lastOperation = null;
 	private boolean operationWasPressed = false;
 	private boolean errorState = false;
-	private boolean firstValueTypedIn = false;
+//	private boolean firstValueTypedIn = false;
 
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS = 9;
+	private boolean firstValueWasReadIn;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +82,14 @@ public class MainActivity extends Activity {
 
 	public void onClickEquals(View view) {
 		if (!errorState && lastOperation != null) {
+			
 			readInSecoundValueFromDisplay();
 			calcResult();
 			displayResult();
+			
 			lastOperation = null;
 			operationWasPressed = false;
-			firstValueTypedIn = true;
+			firstValueWasReadIn=false;
 		}
 	}
 
@@ -97,18 +99,21 @@ public class MainActivity extends Activity {
 		if (!errorState) {
 			Log.i("operation pressed", input);
 			lastOperation = input;
-			operationWasPressed = true;
-
-			if (firstValueTypedIn) {
+			
+			if (firstValueWasReadIn&&operationWasPressed) {
 				Log.i("chaining", "operator pressed");
 
 				readInSecoundValueFromDisplay();
 				calcResult();
 				displayResult();
-				firstValueTypedIn = true;
+				
+				firstValueWasReadIn=false;
 			} else {
 				readInFirstValueFromDisplay();
+				firstValueWasReadIn=true;
 			}
+			
+			operationWasPressed = true;
 		}
 	}
 
@@ -139,6 +144,7 @@ public class MainActivity extends Activity {
 
 	private void readInFirstValueFromDisplay() {
 		firstValue = Double.parseDouble(display.getText().toString());
+
 		Log.i("readInSecoundValueFromDisplay", firstValue.toString());
 	}
 
@@ -193,12 +199,6 @@ public class MainActivity extends Activity {
 			Log.i("calculate", firstValue + " add " + secoundValue);
 		}
 		Log.i("result", result.toString());
-
-		// setze result als firstValue um gleich weiter rechnen zu können
-		// TODO kritische Stelle, intern wird mit dem result als firstValue
-		// weitergerechnet
-		firstValue = result;
-		displayResult();
 	}
 
 	private void initViews() {
