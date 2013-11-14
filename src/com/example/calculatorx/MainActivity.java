@@ -171,15 +171,26 @@ public class MainActivity extends Activity {
 	private String restrictResultToNineSigns() {
 		// TODO Problem mit der E-Schreibweise treten immer wieder auf und
 		// führen zu Error-Meldungen
-//		DecimalFormat formatter = new DecimalFormat("#.##");
-		//runden auf 8 stellen nach dem Komma
-		Double roundedResult = Math.round(result * 100000000) / 100000000.0;
+		
+		int beforeCommaLength= Integer.toString(result.intValue()).length();
+		int afterCommaLength= 9-beforeCommaLength;
+		int roundValue=1;
+		
+		for(int i=afterCommaLength;i>=0;i--){
+			roundValue=roundValue*10;
+		}
+		Double roundedResult = Math.round(result * roundValue) / (double)roundValue;
+		
 		Log.i("rounded result", roundedResult.toString());
+		
+//		DecimalFormat formatter = new DecimalFormat("#.##");
 //		String displayedResult=formatter.format(roundedResult);
 //		Log.i("formated result", displayedResult);
 //		return displayedResult;
 		return roundedResult.toString();
 	}
+	
+	
 
 	/**
 	 * calculate the result Value with the last operation
