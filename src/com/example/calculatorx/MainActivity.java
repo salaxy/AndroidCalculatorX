@@ -160,7 +160,7 @@ public class MainActivity extends Activity {
 			errorState = true;
 		} else {
 			display.setText(formatedResult);
-			Log.i("display result", result.toString());
+			Log.i("display result", formatedResult);
 		}
 	}
 
@@ -176,9 +176,12 @@ public class MainActivity extends Activity {
 		int afterCommaLength= 9-beforeCommaLength;
 		int roundValue=1;
 		
-		for(int i=afterCommaLength;i>=0;i--){
+		for(int i=afterCommaLength;i>0;i--){
 			roundValue=roundValue*10;
 		}
+		
+		Log.i("afterCommaLength", Integer.toString(afterCommaLength));
+		Log.i("roundValue", Integer.toString(roundValue));
 		Double roundedResult = Math.round(result * roundValue) / (double)roundValue;
 		
 		Log.i("rounded result", roundedResult.toString());
