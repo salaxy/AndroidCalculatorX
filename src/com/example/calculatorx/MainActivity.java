@@ -49,8 +49,7 @@ public class MainActivity extends Activity {
 
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS = 9;
-	private boolean firstValueWasReadIn = false;
-	
+
 	private boolean anfang=true;
 
 	@Override
@@ -78,7 +77,6 @@ public class MainActivity extends Activity {
 		firstValue = 0.0d;
 		secoundValue = 0.0d;
 		errorState = false;
-		firstValueWasReadIn = false;
 		anfang=true;
 		
 		for( Button actualButton : buttons ){
@@ -96,7 +94,6 @@ public class MainActivity extends Activity {
 			displayResult();
 
 			this.setLastOperation(null);
-			setFirstValueWasReadIn(false);
 			anfang=true;
 		}
 	}
@@ -115,10 +112,6 @@ public class MainActivity extends Activity {
 		Log.i("operationWasPressed", Boolean.toString(operationWasPressed));
 	}
 
-	public void setFirstValueWasReadIn(boolean firstValueWasReadIn) {
-		this.firstValueWasReadIn = firstValueWasReadIn;
-		Log.i("firstValueWasReadIn", Boolean.toString(firstValueWasReadIn));
-	}
 
 	public void onClickOperator(View view) {
 		String input = ((Button) view).getText().toString();
@@ -133,7 +126,6 @@ public class MainActivity extends Activity {
 				calcResult();
 				displayResult();
 				firstValue=result;
-
 			} else {
 				readInFirstValueFromDisplay();
 				anfang=false;

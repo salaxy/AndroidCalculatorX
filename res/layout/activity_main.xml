@@ -152,4 +152,11 @@
             android:text="/" />
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="286dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.87"
+        android:text=" Beschränkungen: \n - keine Exponetialschreibweise \n - max. Ziffernanzahl 9 \n   (exkl. Punkt, Vorzeichen) \n - Wertebereich 999999999 bis -999999999" />
+
 </LinearLayout>
