@@ -1,6 +1,6 @@
 package com.example.calculatorx;
 
-import java.text.DecimalFormat;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -186,11 +186,15 @@ public class MainActivity extends Activity {
 		
 		Log.i("rounded result", roundedResult.toString());
 		
+		String endResult =BigDecimal.valueOf(roundedResult).toPlainString();
+		Log.i("toPlainString result", roundedResult.toString());
+		
 //		DecimalFormat formatter = new DecimalFormat("#.##");
 //		String displayedResult=formatter.format(roundedResult);
 //		Log.i("formated result", displayedResult);
 //		return displayedResult;
-		return roundedResult.toString();
+//		return roundedResult.toString();
+		return endResult;
 	}
 	
 	
