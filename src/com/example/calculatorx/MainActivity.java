@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 /**
+ * A simple Android calculator with chaining.
  * 
  * @author Andy Klay <klay@fh-brandenburg.de>
- * 
  */
 public class MainActivity extends Activity {
 
@@ -77,6 +77,11 @@ public class MainActivity extends Activity {
 		secoundValue = 0.0d;
 		errorState = false;
 		firstValueWasReadIn = false;
+		
+		for( Button actualButton : buttons ){
+			actualButton.setEnabled(true);
+		}	
+		
 		Log.i("setback pressed", "...");
 	}
 
@@ -118,11 +123,9 @@ public class MainActivity extends Activity {
 		if (operationWasPressed) {
 			display.setText("");
 			operationWasPressed = false;
-		} else {
-			display.append(input);	
 		}
 		
-		if(this.getDoubleLength(display.getText().toString())<=MAX_NUMS){
+		if(this.getDoubleLength(display.getText().toString())<MAX_NUMS){
 			display.append(input);
 			Log.i("append", input);
 		}
@@ -158,12 +161,19 @@ public class MainActivity extends Activity {
 		// catch exceptions
 		if (resultLength > MAX_NUMS || result.isInfinite()
 				|| result.isNaN()) {
-			display.setText(FAIL_NOTIFICATION);
-			errorState = true;
+			setErrorStateOn();
 		} else {
 			display.setText(formatedResult);
 			Log.i("display result", formatedResult);
 		}
+	}
+
+	private void setErrorStateOn() {
+		for( Button actualButton : buttons ){
+			actualButton.setEnabled(false);
+		}
+		display.setText(FAIL_NOTIFICATION);
+		errorState = true;
 	}
 
 	private int getDoubleLength(String formatedResult) {
