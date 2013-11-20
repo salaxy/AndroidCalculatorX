@@ -168,10 +168,7 @@ public class MainActivity extends Activity {
 	 * rounding and format result before it is displaying
 	 * @return
 	 */
-	private String restrictResultToNineSigns() {
-		// TODO Problem mit der E-Schreibweise treten immer wieder auf und
-		// führen zu Error-Meldungen
-		
+	private String restrictResultToNineSigns() {		
 		int beforeCommaLength= Integer.toString(result.intValue()).length();
 		int afterCommaLength= 9-beforeCommaLength;
 		int roundValue=1;
@@ -189,11 +186,6 @@ public class MainActivity extends Activity {
 		String endResult =BigDecimal.valueOf(roundedResult).toPlainString();
 		Log.i("toPlainString result", roundedResult.toString());
 		
-//		DecimalFormat formatter = new DecimalFormat("#.##");
-//		String displayedResult=formatter.format(roundedResult);
-//		Log.i("formated result", displayedResult);
-//		return displayedResult;
-//		return roundedResult.toString();
 		return endResult;
 	}
 	
