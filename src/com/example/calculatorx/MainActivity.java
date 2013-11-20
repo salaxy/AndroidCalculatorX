@@ -97,27 +97,32 @@ public class MainActivity extends Activity {
 
 		if (!errorState) {
 			Log.i("operation pressed", input);
-			lastOperation = input;
+			
 
 			if (firstValueWasReadIn) {
 				Log.i("chaining", "...");
 				onClickEquals(null);
+				firstValue=result;
 			} else {
 				readInFirstValueFromDisplay();
 				firstValueWasReadIn = true;
 			}
+			lastOperation = input;
 			operationWasPressed = true;
 		}
 	}
 
 	private void addingNewNumberToDisplay(String input) {
 		preventTypedinLeadingNulls();
-
+		
 		if (operationWasPressed) {
 			display.setText("");
-			display.append(input);
 			operationWasPressed = false;
 		} else {
+			display.append(input);	
+		}
+		
+		if(this.getDoubleLength(display.getText().toString())<=MAX_NUMS){
 			display.append(input);
 			Log.i("append", input);
 		}
@@ -148,10 +153,7 @@ public class MainActivity extends Activity {
 			formatedResult=restrictResultToNineSigns();
 		}
 
-		int resultLength=formatedResult.length();
-		
-		if(formatedResult.contains("-")) resultLength--;
-		if(formatedResult.contains(".")) resultLength--;
+		int resultLength = getDoubleLength(formatedResult);
 		
 		// catch exceptions
 		if (resultLength > MAX_NUMS || result.isInfinite()
@@ -162,6 +164,14 @@ public class MainActivity extends Activity {
 			display.setText(formatedResult);
 			Log.i("display result", formatedResult);
 		}
+	}
+
+	private int getDoubleLength(String formatedResult) {
+		int resultLength=formatedResult.length();
+		
+		if(formatedResult.contains("-")) resultLength--;
+		if(formatedResult.contains(".")) resultLength--;
+		return resultLength;
 	}
 
 	/**
