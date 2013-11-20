@@ -87,7 +87,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void onClickEquals(View view) {
-		if (!errorState && lastOperation != null) {
+		if (!this.operationWasPressed&&!errorState && lastOperation != null) {
 
 			readInSecoundValueFromDisplay();
 			calcResult();
