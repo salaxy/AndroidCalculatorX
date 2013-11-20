@@ -50,6 +50,8 @@ public class MainActivity extends Activity {
 	private final String FAIL_NOTIFICATION = "error";
 	private final int MAX_NUMS = 9;
 	private boolean firstValueWasReadIn = false;
+	
+	private boolean anfang=true;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class MainActivity extends Activity {
 		secoundValue = 0.0d;
 		errorState = false;
 		firstValueWasReadIn = false;
+		anfang=true;
 		
 		for( Button actualButton : buttons ){
 			actualButton.setEnabled(true);
@@ -92,9 +95,29 @@ public class MainActivity extends Activity {
 			calcResult();
 			displayResult();
 
-			lastOperation = null;
-			firstValueWasReadIn = false;
+			this.setLastOperation(null);
+			setFirstValueWasReadIn(false);
+			anfang=true;
 		}
+	}
+
+	public void setLastOperation(String lastOperation) {
+		this.lastOperation = lastOperation;
+		if(lastOperation==null){
+			Log.i("lastOperation", "null");
+		}else{
+			Log.i("lastOperation", lastOperation);	
+		}
+	}
+
+	public void setOperationWasPressed(boolean operationWasPressed) {
+		this.operationWasPressed = operationWasPressed;
+		Log.i("operationWasPressed", Boolean.toString(operationWasPressed));
+	}
+
+	public void setFirstValueWasReadIn(boolean firstValueWasReadIn) {
+		this.firstValueWasReadIn = firstValueWasReadIn;
+		Log.i("firstValueWasReadIn", Boolean.toString(firstValueWasReadIn));
 	}
 
 	public void onClickOperator(View view) {
@@ -103,17 +126,37 @@ public class MainActivity extends Activity {
 		if (!errorState) {
 			Log.i("operation pressed", input);
 			
-
-			if (firstValueWasReadIn) {
+			this.setOperationWasPressed(true);
+			
+			
+//			if (firstValueWasReadIn) {
+//				Log.i("chaining", "...");
+//
+//				readInSecoundValueFromDisplay();
+//				calcResult();
+//				displayResult();
+//
+//				firstValue=result;
+//				this.setFirstValueWasReadIn(true);
+//			} else {
+//				readInFirstValueFromDisplay();
+//				this.setFirstValueWasReadIn(true);
+//			}
+			
+			if (!anfang) {
 				Log.i("chaining", "...");
-				onClickEquals(null);
+
+				readInSecoundValueFromDisplay();
+				calcResult();
+				displayResult();
 				firstValue=result;
+
 			} else {
 				readInFirstValueFromDisplay();
-				firstValueWasReadIn = true;
+				anfang=false;
 			}
+			
 			lastOperation = input;
-			operationWasPressed = true;
 		}
 	}
 
@@ -122,13 +165,13 @@ public class MainActivity extends Activity {
 		
 		if (operationWasPressed) {
 			display.setText("");
-			operationWasPressed = false;
 		}
 		
 		if(this.getDoubleLength(display.getText().toString())<MAX_NUMS){
 			display.append(input);
 			Log.i("append", input);
 		}
+		this.setOperationWasPressed(false);
 	}
 
 	private void preventTypedinLeadingNulls() {
