@@ -125,25 +125,8 @@ public class MainActivity extends Activity {
 
 		if (!errorState) {
 			Log.i("operation pressed", input);
-			
-			this.setOperationWasPressed(true);
-			
-			
-//			if (firstValueWasReadIn) {
-//				Log.i("chaining", "...");
-//
-//				readInSecoundValueFromDisplay();
-//				calcResult();
-//				displayResult();
-//
-//				firstValue=result;
-//				this.setFirstValueWasReadIn(true);
-//			} else {
-//				readInFirstValueFromDisplay();
-//				this.setFirstValueWasReadIn(true);
-//			}
-			
-			if (!anfang) {
+
+			if (!anfang&&!operationWasPressed) {
 				Log.i("chaining", "...");
 
 				readInSecoundValueFromDisplay();
@@ -156,6 +139,7 @@ public class MainActivity extends Activity {
 				anfang=false;
 			}
 			
+			setOperationWasPressed(true);
 			lastOperation = input;
 		}
 	}
